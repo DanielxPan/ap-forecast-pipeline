@@ -49,15 +49,27 @@ on to know which file belongs to which store.
   selectors (`FuzzySelectorArgument`) plus an image-based fallback
   (`SearchSteps="FuzzySelector, Image"`), so small changes to the
   portal's DOM don't immediately break the automation.
-- **Error handling**: each workflow wraps its download logic in
-  `TryCatch`; failures are collected per store into a table (store name,
-  supplier, error message) rather than aborting the whole run, so one
-  store's failure doesn't block every other store's statement from being
+- **File selection**: in the invoice system, the real statement and its
+  "Account Activity Listing" are listed under the same name, so there's
+  no way to tell them apart before clicking download — the robot can end
+  up downloading either one. Statement files and Activity Listing files
+  do download with different filename patterns, though, so after
+  downloading, an if/else step checks the downloaded file's name against
+  the expected Statement pattern. If it got the Activity Listing by
+  mistake, it deletes that file and re-selects/downloads the real
+  statement instead.
+- **Error handling**: the file-selection-and-save step for each store
+  runs inside a `TryCatch`. On any exception, the `Catch` block appends
+  one row (store name, supplier, error message) to an in-memory Error
+  data table and the loop moves on to the next store, so one store's
+  failure doesn't block every other store's statement from being
   downloaded that week.
-- **Exception visibility**: failures are emailed to the AP team as a
-  summary (which stores failed and why) immediately after the run,
-  instead of silently retrying or getting buried in a log file no one
-  checks.
+- **Exception visibility**: the Error data table is only emailed out
+  once, as one summary, after every store in the run has been processed
+  — not per-store as each failure happens. That keeps the RPA admin's
+  inbox to one email per run (which stores failed and why) instead of a
+  flood of one-off failure emails, or errors silently getting buried in
+  a log file no one checks.
 - **Credentials**: none are hardcoded in the workflow — this project
   followed UiPath's own best practice of keeping the portal login out of
   the `.xaml` files entirely (there's a `Type Into` for the account

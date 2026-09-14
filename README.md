@@ -29,29 +29,48 @@ day every week before the forecast can go out.
 ```mermaid
 flowchart LR
     subgraph RPA["rpa/ — statement download (UiPath)"]
-        A[Scheduled trigger] --> B[Log into statement portal]
-        B --> C[Download newest statements per store]
-        C --> D[Save PDFs to shared data folder]
-        D --> E[Email exceptions/errors to AP team]
+        direction TB
+        A[Scheduled trigger] --> B[Log into invoice system]
+        B --> C(["For each store"])
+        C --> D{"Downloaded file matches<br/>Statement filename pattern?"}
+        D -->|no, got Activity Log| D1[Delete it, re-select and<br/>download the real Statement]
+        D -->|yes| D2[Use the downloaded<br/>statement file]
+        D1 --> E[Save PDF to shared<br/>data folder]
+        D2 --> E
+        D -. exception .-> F[Catch: log row to<br/>Error data table]
+        E -. exception .-> F
+        E --> G{More stores<br/>left?}
+        F --> G
+        G -->|yes| C
+        G -->|no, loop done| H[Email full error log<br/>to RPA admin]
     end
 
     subgraph PY["python/ — forecast build (Python)"]
-        F[Parse each statement PDF] --> G[Normalize dates & amounts]
-        G --> H[Pivot: one row per due-date bucket,<br/>one column per store]
-        H --> I[Add bank-routing label row]
-        I --> J[Write multi-sheet Excel workbook]
+        direction TB
+        I[Parse each statement PDF] --> J[Normalize dates & amounts]
+        J --> K[Pivot: one row per due-date bucket,<br/>one column per store]
+        K --> L[Add bank-routing label row]
+        L --> M[Write multi-sheet Excel workbook]
     end
 
-    D -->|PDFs land in DATA_ROOT| F
-    J --> K[Forward workbook to finance team]
+    E -->|PDFs land in DATA_ROOT| I
+    M --> N[Forward workbook to finance team]
 ```
 
-- **`rpa/`** — a UiPath project that logs into the suppliers' statement
-  portal on a schedule, downloads each store's newest statement, and
-  drops it into a shared folder using a fixed filename convention
-  (`{date}_{supplier}_{store}.pdf`) that the Python side depends on.
-  See [`rpa/README.md`](rpa/README.md) for the RPA-specific design
-  decisions.
+- **`rpa/`** — a UiPath project that logs into the suppliers' invoice
+  system on a schedule and downloads each store's newest statement. The
+  portal lists the real statement and its "Account Activity Listing"
+  under the same name, so the robot can't tell them apart before
+  clicking download — after downloading, it checks the file's name
+  against the expected pattern, and if it grabbed the Activity Listing
+  by mistake, deletes it and re-selects the real statement. Each store
+  runs inside a try/catch, saving the statement to a shared folder using
+  a fixed filename convention (`{date}_{supplier}_{store}.pdf`) that the
+  Python side depends on. A failure on one store is logged and the loop
+  moves on to the next store rather than stopping the run; the
+  accumulated error log is emailed to the RPA admin once every store has
+  been processed. See [`rpa/README.md`](rpa/README.md) for the full
+  design decisions.
 - **`python/`** — parses those PDFs with `pdfplumber`, normalizes and
   pivots the data with `pandas`, and writes a ready-to-forward Excel
   workbook with `xlsxwriter`. See [`python/README.md`](python/README.md).
