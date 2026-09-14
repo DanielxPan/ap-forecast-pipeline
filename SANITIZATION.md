@@ -25,20 +25,27 @@ history.
 
 ## What was renamed / genericized
 
-| Real value | Replaced with |
+This table intentionally does **not** spell out the real values it
+replaced — this file lives in the public repo it's describing, so
+listing the real company name, real supplier names, or real bank names
+here would defeat the whole point. If you need to double-check a
+specific replacement against the source, compare against the private
+`ap-forecast-automation` / `rpa-automation` repos directly.
+
+| What was found | Replaced with |
 |---|---|
-| Company name "[REDACTED: real company name]" | "Northstar Retail Group" |
-| Windows service-account username `NorthstarBot` (in `C:\Users\NorthstarBot\...`) | `NorthstarBot` |
-| Email domain `northstarretail.example.com` | `northstarretail.example.com` |
+| The real company name and its branding | "Northstar Retail Group" |
+| The real Windows automation-account username (same as the company name, in file paths) | `NorthstarBot` |
+| The real company email domain | `northstarretail.example.com` |
 | 4 real colleague email addresses (in RPA login/notification steps) | one generic `ap-team@northstarretail.example.com` |
-| Real supplier code/name #1 [REDACTED] | `ACME` / "Acme" |
-| Real supplier code/name #2 [REDACTED] | `NWIND` / "Northwind" |
-| Real supplier legal entity name [REDACTED] | `Northwind Distribution (Sample State) Pty Ltd (Northwind Traders)` |
-| 45 real store codes [REDACTED] | `STORE-01` .. `STORE-35`, same duplicate/multi-bank structure preserved |
-| Real bank names [REDACTED] — both in the config data table **and** hardcoded in `add_bank_details_row`'s column-renaming logic | `Bank-1`, `Bank-2`, `Bank-3` |
-| README example bank name [REDACTED] | `Bank-1` |
-| Personal dev-machine path [REDACTED] and `@author` docstring in `modify_filename.py` | generic `C:\data\...` path, author line removed |
-| RPA `.xaml` filenames referencing the real supplier codes | `-Acme.xaml` / `-Northwind.xaml` |
+| Real supplier code/name #1 | `ACME` / "Acme" |
+| Real supplier code/name #2 (a well-known distributor) | `NWIND` / "Northwind" |
+| That second supplier's real registered legal entity name | `Northwind Distribution (Sample State) Pty Ltd (Northwind Traders)` |
+| 45 real store codes | `STORE-01` .. `STORE-35`, same duplicate/multi-bank structure preserved |
+| Real bank names (3 major Australian banks) — both in the config data table **and** hardcoded in `add_bank_details_row`'s column-renaming logic | `Bank-1`, `Bank-2`, `Bank-3` |
+| README example bank name (a 4th major Australian bank) | `Bank-1` |
+| Personal dev-machine path and username, plus `@author` docstring in `modify_filename.py` | generic `C:\data\...` path, author line removed |
+| RPA `.xaml` filenames referencing the real supplier codes | `SendNewestStatements-Acme.xaml` / `-Northwind.xaml` |
 | RPA folder names referencing the real supplier codes | `rpa/acme-statement-download` / `rpa/northwind-statement-download` |
 
 Kept as-is (not identifying): the third-party invoice system's
@@ -70,11 +77,13 @@ something that reveals which company uses it.
 
 ## Still worth doing before/after publishing
 
-- Add a short screen recording or GIF of the RPA automation running
-  (see `rpa/README.md`) — not included here, since it requires a live
-  UiPath environment.
 - Skim the rendered `.xaml` files once more in UiPath Studio (they're
   large; this pass was text/regex-based and was verified for
   well-formed XML and for the absence of every string above, but a
   human pass through Studio is cheap insurance before flipping this
   repo public).
+
+A screen recording/GIF of the RPA automation running was considered
+(see `rpa/README.md`) but deliberately left out — everything visible on
+screen during a real run is sensitive, and isn't easy to mock or redact
+in a recording the way text can be sanitized.

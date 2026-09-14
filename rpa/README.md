@@ -49,6 +49,13 @@ on to know which file belongs to which store.
   selectors (`FuzzySelectorArgument`) plus an image-based fallback
   (`SearchSteps="FuzzySelector, Image"`), so small changes to the
   invoice system's DOM don't immediately break the automation.
+- **Dynamic selector for store switching**: the invoice system's URL
+  doesn't carry a store parameter, so there's no way to jump straight to
+  a given store's data by navigating to a URL. Switching stores happens
+  through the company-wide dashboard instead, using a selector built at
+  runtime with the current store name substituted in — one dynamic
+  selector handles every store, rather than one hardcoded selector per
+  store.
 - **File selection**: in the invoice system, the real statement and its
   "Account Activity Listing" are listed under the same name, so there's
   no way to tell them apart before clicking download — the robot can end
@@ -79,14 +86,12 @@ on to know which file belongs to which store.
 ## What a stranger can't see from the `.xaml` alone
 
 UiPath Studio is required to open and visually step through these
-workflows — the raw XML shows the logic but not the running UI. For a
-project like this, the two things that would make it far more legible
-to a reviewer are:
+workflows — the raw XML shows the logic but not the running UI. A flow
+diagram of the activity sequence and exception handling helps close
+that gap (see the [top-level architecture diagram](../README.md#the-pipeline)
+for how this stage fits into the full pipeline).
 
-- **A short screen recording or GIF** of the automation actually running
-  against a (sanitized/mocked) invoice system — this is the single highest-value
-  addition for a repo like this, and is intentionally *not* included
-  here yet.
-- **A flow diagram** of the activity sequence and exception handling
-  (see the [top-level architecture diagram](../README.md#the-pipeline)
-  for how this stage fits into the full pipeline).
+There's no screen recording or GIF of the automation running, and there
+won't be one: everything visible on screen during a real run — the
+invoice system UI, store names, statement contents — is sensitive, and
+unlike text it isn't practical to mock or redact in a video.
