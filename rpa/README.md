@@ -1,8 +1,8 @@
 # RPA: Statement Download
 
 The first stage of the [ap-forecast-pipeline](../README.md) case study:
-a UiPath automation that logs into the suppliers' online statement
-portal and downloads each store's newest bank statement, unattended, on
+a UiPath automation that logs into the invoice system where the suppliers' online statement
+portal is and downloads each store's newest statement, unattended, on
 a schedule.
 
 > These are the real `.xaml` workflow files (UiPath's project format is
