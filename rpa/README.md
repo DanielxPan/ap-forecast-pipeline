@@ -1,9 +1,9 @@
 # RPA: Statement Download
 
 The first stage of the [ap-forecast-pipeline](../README.md) case study:
-a UiPath automation that logs into the invoice system where the suppliers' online statement
-portal is and downloads each store's newest statement, unattended, on
-a schedule.
+a UiPath automation that logs into the company's own invoice system —
+a single, store-divided system, not a supplier-hosted portal — and
+downloads each store's newest statement, unattended, on a schedule.
 
 > These are the real `.xaml` workflow files (UiPath's project format is
 > plain XML, meant to be source-controlled), sanitized the same way as
@@ -14,16 +14,16 @@ a schedule.
 
 ## Business problem
 
-Supplier statements were only available by logging into each store's
-web invoice portal by hand, once a week, and downloading the newest statement
-for every store one at a time — before anyone could even start building
-the AP forecast. That's pure clicking, not judgment, and it had to
-happen on a fixed schedule for the downstream forecast to go out on
-time.
+Supplier statements were only available by logging into the company's
+own invoice system and working through it store by store, by hand, once
+a week, downloading the newest statement for each store one at a time —
+before anyone could even start building the AP forecast. That's pure
+clicking, not judgment, and it had to happen on a fixed schedule for the
+downstream forecast to go out on time.
 
 ## Why RPA (and not an API integration)
 
-The statement portal is a web app behind an SSO login with no public
+The invoice system is a web app behind an SSO login with no public
 API available at this account's tier. Given that constraint, the
 realistic options were: do it by hand every week, or automate the
 browser. UI automation is the correct tool when there's no API to call —
@@ -33,8 +33,8 @@ it's not the first choice when one exists, but it's the right one here.
 
 - **`acme-statement-download/`** — the main UiPath project. `Main.xaml`
   orchestrates the run; `SendNewestStatements-Acme.xaml` logs into the
-  portal and downloads the newest statement per store for the sample
-  "Acme" supplier.
+  invoice system and downloads the newest statement per store for the
+  sample "Acme" supplier.
 - **`northwind-statement-download/`** — a second, newer UiPath project
   for the sample "Northwind" supplier, following the same pattern.
 
@@ -48,7 +48,7 @@ on to know which file belongs to which store.
 - **Selector strategy**: UI elements are targeted with UiPath's fuzzy
   selectors (`FuzzySelectorArgument`) plus an image-based fallback
   (`SearchSteps="FuzzySelector, Image"`), so small changes to the
-  portal's DOM don't immediately break the automation.
+  invoice system's DOM don't immediately break the automation.
 - **File selection**: in the invoice system, the real statement and its
   "Account Activity Listing" are listed under the same name, so there's
   no way to tell them apart before clicking download — the robot can end
@@ -71,8 +71,8 @@ on to know which file belongs to which store.
   flood of one-off failure emails, or errors silently getting buried in
   a log file no one checks.
 - **Credentials**: none are hardcoded in the workflow — this project
-  followed UiPath's own best practice of keeping the portal login out of
-  the `.xaml` files entirely (there's a `Type Into` for the account
+  followed UiPath's own best practice of keeping the invoice system
+  login out of the `.xaml` files entirely (there's a `Type Into` for the account
   email, but the password step uses a separate secure-credential
   activity, so nothing sensitive lives in source control).
 
@@ -84,7 +84,7 @@ project like this, the two things that would make it far more legible
 to a reviewer are:
 
 - **A short screen recording or GIF** of the automation actually running
-  against a (sanitized/mocked) portal — this is the single highest-value
+  against a (sanitized/mocked) invoice system — this is the single highest-value
   addition for a repo like this, and is intentionally *not* included
   here yet.
 - **A flow diagram** of the activity sequence and exception handling

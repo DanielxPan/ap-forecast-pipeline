@@ -12,7 +12,7 @@ history.
 - All UiPath design-time artifacts: `.objects/`, `.storage/`,
   `.settings/`, `.screenshots/`, `.tmh/` — local Studio caches and
   screenshots, not source, and several of the screenshots showed the
-  real statement portal UI.
+  real invoice system UI.
 - All embedded `IconBase64` / `ImageBase64` / `InformativeScreenshot`
   attributes inside the `.xaml` files (design-time thumbnails).
 - `MissingStatements.csv` (was empty of real data, but dropped anyway
@@ -41,7 +41,7 @@ history.
 | RPA `.xaml` filenames referencing the real supplier codes | `-Acme.xaml` / `-Northwind.xaml` |
 | RPA folder names referencing the real supplier codes | `rpa/acme-statement-download` / `rpa/northwind-statement-download` |
 
-Kept as-is (not identifying): the third-party statement portal's
+Kept as-is (not identifying): the third-party invoice system's
 product name ("Lightyear") — it's a commercial SaaS product, not
 something that reveals which company uses it.
 
@@ -63,8 +63,8 @@ something that reveals which company uses it.
 - No internal Jira/Confluence/Notion links or ticket references were
   present in any file carried into this repo.
 - No hardcoded credentials or connection strings were found in the RPA
-  workflows — the portal login uses a `Type Into` for the account email
-  only; the password step uses a separate secure-credential activity,
+  workflows — the invoice system's login uses a `Type Into` for the
+  account email only; the password step uses a separate secure-credential activity,
   consistent with UiPath's own guidance to keep secrets in
   Orchestrator's credential store rather than in the workflow.
 

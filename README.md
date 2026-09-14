@@ -58,15 +58,18 @@ flowchart LR
     M --> N[Forward workbook to finance team]
 ```
 
-- **`rpa/`** — a UiPath project that logs into the suppliers' invoice
-  system on a schedule and downloads each store's newest statement. The
-  portal lists the real statement and its "Account Activity Listing"
-  under the same name, so the robot can't tell them apart before
-  clicking download — after downloading, it checks the file's name
-  against the expected pattern, and if it grabbed the Activity Listing
-  by mistake, deletes it and re-selects the real statement. Each store
-  runs inside a try/catch, saving the statement to a shared folder using
-  a fixed filename convention (`{date}_{supplier}_{store}.pdf`) that the
+- **`rpa/`** — a UiPath project that logs into the company's own
+  invoice system on a schedule and downloads each store's newest
+  statement. The system is web-based and divided by store, not by
+  supplier, so a company-wide run means visiting each store's own area
+  in turn. Statement documents and "Account Activity Listing" documents
+  are listed under the same name in there, so the robot can't tell them
+  apart before clicking download — after downloading, it checks the
+  file's name against the expected pattern, and if it grabbed the
+  Activity Listing by mistake, deletes it and re-selects the real
+  statement. Each store runs inside a try/catch, saving the statement to
+  a shared folder using a fixed filename convention
+  (`{date}_{supplier}_{store}.pdf`) that the
   Python side depends on. A failure on one store is logged and the loop
   moves on to the next store rather than stopping the run; the
   accumulated error log is emailed to the RPA admin once every store has
