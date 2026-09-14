@@ -14,8 +14,8 @@ a schedule.
 
 ## Business problem
 
-Supplier statements were only available by logging into each supplier's
-web portal by hand, once a week, and downloading the newest statement
+Supplier statements were only available by logging into each store's
+web invoice portal by hand, once a week, and downloading the newest statement
 for every store one at a time — before anyone could even start building
 the AP forecast. That's pure clicking, not judgment, and it had to
 happen on a fixed schedule for the downstream forecast to go out on
