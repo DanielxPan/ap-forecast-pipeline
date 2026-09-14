@@ -1,0 +1,10 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+  "entryPoints": [
+    {
+      "filePath": "SendNewestStatements-Northwind.xaml",
+      "uniqueId": "d23106d1-a2ad-40d2-9c07-d47a5b415dfb",
+      "type": "process"
+    }
+  ]
+}
