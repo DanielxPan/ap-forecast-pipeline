@@ -47,9 +47,9 @@ flowchart LR
     J --> K[Forward workbook to finance team]
 ```
 
-- **`rpa/`** — a UiPath project that logs into the suppliers' statement
-  portal on a schedule, downloads each store's newest statement, and
-  drops it into a shared folder using a fixed filename convention
+- **`rpa/`** — a UiPath project that logs into the invoice system to
+  access suppliers' statement on a schedule, downloads each store's newest statement
+  , and drops it into a shared folder using a fixed filename convention
   (`{date}_{supplier}_{store}.pdf`) that the Python side depends on.
   See [`rpa/README.md`](rpa/README.md) for the RPA-specific design
   decisions.
@@ -67,7 +67,7 @@ shared database or message queue between them.
 RPA and a Python script solve different halves of this problem, and
 neither one is a good tool for the other's half:
 
-- The statement portal is a web app behind SSO with no public API for
+- The invoice system is a web app behind SSO with no public API for
   this account tier — RPA (UI automation) is the practical way to pull
   files out of it on a schedule, unattended.
 - Once the files exist on disk, this is a text-extraction and
