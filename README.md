@@ -2,7 +2,7 @@
 
 A two-stage automation pipeline that replaced a weekly manual accounts-payable
 forecasting process for a multi-site retail business: an RPA bot downloads
-supplier bank statements, and a Python service parses them into a
+supplier statements, and a Python service parses them into a
 forecast workbook the finance team can act on immediately.
 
 This is a sanitized, portfolio version of a private production system.
@@ -15,9 +15,10 @@ architecture, logic, and code structure are otherwise unmodified.
 
 Every week, someone on the finance team had to:
 
-1. Open every supplier's statement PDF, for every store.
-2. Read off the overdue balance, broken out by due-date bucket.
-3. Retype all of it into a spreadsheet, arranged by store and by which
+1. Download statements from 25 store sites in the invoice system.
+2. Open every supplier's statement PDF, for every store.
+3. Read off the overdue balance, broken out by due-date bucket.
+4. Retype all of it into a spreadsheet, arranged by store and by which
    bank account the payment run for that store goes through.
 
 For a business with dozens of stores and multiple suppliers, that's a
